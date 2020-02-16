@@ -115,6 +115,8 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     private Button btn_qjy;
     private Button btn_qzz;
     private Button btn_qok;
+    private Button btn_inquire;
+    private Button btn_clear;
 
     private TextView tv_connectedDevice;
     private TextView tv_zdx;
@@ -293,7 +295,11 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
         btn_vrq = (Button) findViewById(R.id.btn_vrq);//版本查询
         btn_bd_to_bd = (Button) findViewById(R.id.btn_bd2bd);//2BD
         btn_bd_to_bd_bypos = (Button) findViewById(R.id.btn_bd2bd_pos);//2BDPOS
+        btn_inquire=(Button)findViewById(R.id.btn_inquire); //查询按钮
+        btn_clear=(Button)findViewById(R.id.btn_clear); //清空按钮
 
+        btn_clear.setOnClickListener(this);
+        btn_inquire.setOnClickListener(this);
         btn_msc.setOnClickListener(this);
         btn_vrq.setOnClickListener(this);
         btn_bd_to_bd.setOnClickListener(this);
@@ -442,6 +448,13 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_inquire://查询按钮
+
+                break;
+            case R.id.btn_clear://清空显示按钮
+                mDataAdapter.arr.clear();
+                mDataAdapter.notifyDataSetChanged();
+                break;
             case R.id.btn_msc: //工作模式按钮，查询系统当前工作模式(CCMSC)
                 BLEManager.getInstance().sendCCMSC();
                 break;
