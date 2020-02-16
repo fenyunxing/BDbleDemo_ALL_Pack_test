@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BDbleDemo_ALL_Pack.iml" filepath="$PROJECT_DIR$/BDbleDemo_ALL_Pack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BDbleDemo_ALL_Pack_test.iml" filepath="$PROJECT_DIR$/BDbleDemo_ALL_Pack_test.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/bdblesdk/bdblesdk.iml" filepath="$PROJECT_DIR$/bdblesdk/bdblesdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/bdblesdk40/bdblesdk40.iml" filepath="$PROJECT_DIR$/bdblesdk40/bdblesdk40.iml" />
