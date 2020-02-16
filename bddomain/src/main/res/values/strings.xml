@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">BDdomain</string>
+    <string name="dwtype_this_device">Location info of this device</string>
+    <string name="dwtype_sub_device">Subordinate user location info</string>
+    <string name="dwtype_report_device">Location report info</string>
+    <string name="dwpre_first">1st 20m</string>
+    <string name="dwpre_second">2nd 100m</string>
+    <string name="dw_emergency">Emerg location</string>
+    <string name="dw_unemergency">Non-Emerg location</string>
+    <string name="dw_multi_result">Multi valued solution</string>
+    <string name="dw_unmulti_result">Non-Multi valued solution</string>
+<!--    <string name="dw_hightype_high">High altitude</string>
+    <string name="dw_hightype_normol">Normol altitude</string>-->
+</resources>

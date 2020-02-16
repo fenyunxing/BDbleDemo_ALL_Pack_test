@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="red_dark">#995B66</color>
+    <color name="red_fdbd">#D42929</color>
+    <color name="red_pomegranate">#C1392B</color>
+    <color name="red_alizarin">#E84C3D</color>
+    <color name="red_candy">#FE6553</color>
+    <color name="red_pink">#E57078</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="orange_pumpkin">#D25400</color>
+    <color name="orange_carrot">#E67F22</color>
+    <color name="orange_sky">#f07f03</color>
+    <color name="orange_candy">#FF983B</color>
+    <color name="orange">#F39C11</color>
+
+
+    <color name="yellow_sunflower">#F1C40F</color>
+    <color name="yellow_dull">#FFCC56</color>
+    <color name="yellow_candy">#FFE57A</color>
+    <color name="yellow_milk">#FEE79B</color>
+    <color name="yellow_light">#FFF7B9</color>
+    <color name="yellow_phone">#E0DF74</color>
+
+    <color name="green_nephritis">#27AE61</color>
+    <color name="green_sea">#46B39E</color>
+    <color name="green_emerland">#58D68D</color>
+    <color name="green_turquoise">#1BBC9B</color>
+    <color name="green_candy">#35C87A</color>
+    <color name="green_grass">#91D101</color>
+    <color name="green_fdbd">#7FB351</color>
+    <color name="green_fluo_white">#74E074</color>
+    <color name="green_fluo_white_transparent">#9074E074</color>
+    <color name="green_fluo_light">#04FC04</color>
+    <color name="green_fluo_light_transparent">#6004FC04</color>
+    <color name="green_fluorescence">#01FAFC</color>
+
+    <color name="blue_fdbd">#0093DD</color>
+    <color name="blue_fdbd_transparent">#900093DD</color>
+    <color name="blue_sky">#03CBFF</color>
+    <color name="blue_belizehole">#297FB8</color>
+    <color name="blue_peteriver">#3598DB</color>
+    <color name="blue_light">#74E8FF</color>
+    <color name="blue_white">#46B2E7</color>
+    <color name="blue_cloud">#CCF2FF</color>
+    <color name="blue_water">#ECFBFF</color>
+    <color name="blue_dull">#1E3E57</color>
+    <color name="blue_midnicht">#2D3E50</color>
+    <color name="blue_midnicht_transparent">#902D3E50</color>
+    <color name="blue_wetasphalt">#34495E</color>
+    <color name="blue_user">#74CFE0</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="toolbar_color">#000000</color>
+
+
+    <color name="purple_wisteria">#8D44AD</color>
+    <color name="purple_amethyst">#9A59B5</color>
+
+    <color name="gray_lime">#3C3F41</color>
+    <color name="gray_android">#B3B3B3</color>
+    <color name="gray_android_transparent">#28B3B3B3</color>
+    <color name="gray_asbestos">#7E8C8D</color>
+    <color name="gray_transparent">#707E8C8D</color>
+    <color name="gray_concrete">#95A5A5</color>
+    <color name="gray_silver">#BEC3C7</color>
+    <color name="gray_clouds">#ECF0F1</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="black">#000000</color>
+    <color name="black_blue">#2D2D2D</color>
+    <color name="thirty_transparent_black">#4d000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

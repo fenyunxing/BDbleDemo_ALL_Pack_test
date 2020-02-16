@@ -1,0 +1,1 @@
+include ':app', ':bdplatformsdk', ':bdblesdk', ':bddomain', ':bdblesdk40', ':bddomain40', ':bddomainuni', ':bdblesdkuni', ':blesdk'

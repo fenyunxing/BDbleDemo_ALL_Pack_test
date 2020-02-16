@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dwtype_this_device">本设备位置信息</string>
+    <string name="dwtype_sub_device">下属用户位置信息</string>
+    <string name="dwtype_report_device">位置报告信息</string>
+    <string name="dwpre_first">一档 20m</string>
+    <string name="dwpre_second">二档 100m</string>
+    <string name="dw_emergency">紧急定位</string>
+    <string name="dw_unemergency">非紧急定位</string>
+    <string name="dw_multi_result">多值解</string>
+    <string name="dw_unmulti_result">非多值解</string>
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/maintoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:paddingTop="@dimen/toolbar_paddingTop">
+
+        <TextView
+            android:id="@+id/scantitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:text="北斗蓝牙测试"
+            android:textColor="@color/gray_android"
+            android:textSize="@dimen/title_text"
+            android:textStyle="bold"/>
+    </android.support.v7.widget.Toolbar>
+    <Button
+        android:id="@+id/btn_to_21"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2.1协议"/>
+
+    <Button
+        android:id="@+id/btn_to_40"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="4.0协议"/>
+
+    <Button
+        android:id="@+id/btn_to_21_40"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2.1与4.0协议兼容"/>
+
+    <Button
+        android:id="@+id/btn_to_platform"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="平台协议"/>
+    <Button
+        android:id="@+id/btn_to_common"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="基本蓝牙操作"/>
+</LinearLayout>

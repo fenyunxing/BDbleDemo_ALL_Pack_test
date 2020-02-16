@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BDbleSDK</string>
+    <string name="dialog_title">Prompt</string>
+    <string name="if_gps_ble">Please open the local location service for Bluetooth search.</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+</resources>

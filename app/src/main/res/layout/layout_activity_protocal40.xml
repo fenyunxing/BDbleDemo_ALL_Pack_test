@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.bdbledemo.Activity.Protocal40Activity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarble"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:paddingTop="@dimen/toolbar_paddingTop">
+
+        <TextView
+            android:id="@+id/scantitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:text="4.0协议测试"
+            android:textColor="@color/gray_android"
+            android:textSize="@dimen/title_text"
+            android:textStyle="bold"/>
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_startScan"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="开始扫描"/>
+
+                <Button
+                    android:id="@+id/btn_stopScan"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="停止扫描"/>
+
+
+            </LinearLayout>
+
+
+
+            <ListView
+                android:visibility="gone"
+                android:id="@+id/lv_scanDevice"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:background="@color/gray_asbestos">
+
+            </ListView>
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="返回"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="当前连接设备:"
+                    android:textColor="@color/gray_android"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/tv_connectedDevice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/red_alizarin"
+                    android:textSize="20sp"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:visibility="gone"
+                        android:id="@+id/btn_disconnectDevice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:text="断开连接"/>
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/btn_txa"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="通信"/>
+
+                <Button
+                    android:id="@+id/btn_dwa"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="定位"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="自定义发送"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_sendText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"/>
+
+                <Button
+                    android:id="@+id/btn_send"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="发送"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="数据显示区"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"/>
+
+            <ListView
+                android:id="@+id/lv_Data"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:background="@color/yellow_light"
+                android:divider="#ffffff"
+                android:stackFromBottom="false"
+                android:theme="@android:style/Theme.Translucent"
+                android:transcriptMode="alwaysScroll"></ListView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="TXXX解析区"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_txr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="无"
+                android:textColor="@color/gray_android"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="DWXX解析区"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_dwr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="无"
+                android:textColor="@color/gray_android"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="SJXX信息解析区"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_sjxx"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="无"
+                android:textColor="@color/gray_android"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="ICXX信息解析区"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_ici"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="无"
+                android:textColor="@color/gray_android"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="FKXX信息解析区"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_fki"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="无"
+                android:textColor="@color/gray_android"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="GLXX信息解析区"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_bsi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="无"
+                android:textColor="@color/gray_android"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="ZJXX信息解析区"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_zjxx"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="无"
+                android:textColor="@color/gray_android"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_android"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="盒子专用信息解析区"
+                android:textColor="@color/blue_fdbd"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="设置SOS卡号"/>
+
+                <EditText
+                    android:id="@+id/et_setSOS"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="7"/>
+
+                <Button
+                    android:id="@+id/btn_setSOS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="盒子掉电保存SOS卡号"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_sos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="SOS状态:"
+                android:textColor="@color/gray_android"
+                android:textSize="20sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tv_dl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="电量:"
+                android:textColor="@color/gray_android"
+                android:textSize="20sp"
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_ici"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="IC检测"/>
+
+                    <Button
+                        android:id="@+id/btn_xtzj"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="系统自检"/>
+
+                    <Button
+                        android:id="@+id/btn_cksc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="串口输出"/>
+
+                    <Button
+                        android:id="@+id/btn_sjsc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="时间输出"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_bbdq"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="版本读取"/>
+
+                    <Button
+                        android:id="@+id/btn_bsi"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="功率"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

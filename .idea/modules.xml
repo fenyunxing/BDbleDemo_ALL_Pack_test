@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BDbleDemo_ALL_Pack.iml" filepath="$PROJECT_DIR$/BDbleDemo_ALL_Pack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bdblesdk/bdblesdk.iml" filepath="$PROJECT_DIR$/bdblesdk/bdblesdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bdblesdk40/bdblesdk40.iml" filepath="$PROJECT_DIR$/bdblesdk40/bdblesdk40.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bdblesdkuni/bdblesdkuni.iml" filepath="$PROJECT_DIR$/bdblesdkuni/bdblesdkuni.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bddomain/bddomain.iml" filepath="$PROJECT_DIR$/bddomain/bddomain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bddomain40/bddomain40.iml" filepath="$PROJECT_DIR$/bddomain40/bddomain40.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bddomainuni/bddomainuni.iml" filepath="$PROJECT_DIR$/bddomainuni/bddomainuni.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bdplatformsdk/bdplatformsdk.iml" filepath="$PROJECT_DIR$/bdplatformsdk/bdplatformsdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/blesdk/blesdk.iml" filepath="$PROJECT_DIR$/blesdk/blesdk.iml" />
+    </modules>
+  </component>
+</project>
