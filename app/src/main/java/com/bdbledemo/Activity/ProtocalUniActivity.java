@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bdbledemo.Activity.ScanActiviy.ScanBleActivityUni;
 import com.bdbledemo.Adapter.DataAdapter;
 import com.bdbledemo.Adapter.ScanBleAdapter;
+import com.bdbledemo.LitePal.MySendTable;
 import com.bdbledemo.LitePal.ProtocalTable;
 import com.bdbledemo.R;
 import com.bdblesdkuni.executor.handler.BDBLEHandler;
@@ -94,7 +95,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     private Button btn_bsi_21;
     private Button btn_txa_21;
     private Button btn_dwa_21;
-    private Button btn_send;
+    private Button btn_senduni;
     private Button btn_cksc;
     private Button btn_xtzj;
     private Button btn_sjsc;
@@ -149,11 +150,12 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     private TextView tv_bsi_21;
     private TextView tv_rmc_21;
     private TextView tv_gga_21;
-    private EditText et_sendText;
+    private EditText et_sendTextuni;
     private EditText et_inquire;
     private EditText et_setSOS;
     private Context mContext;
     private String sosNum;
+    private String et_sendText;
 
     private RMCMsg rmcTestMsg; //2.1协议RMC信息类
 
@@ -277,7 +279,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
         btn_bsi = (Button) findViewById(R.id.btn_bsi);//4.0 功率按钮
         btn_txa = (Button) findViewById(R.id.btn_txa);//4.0通信按钮
         btn_dwa = (Button) findViewById(R.id.btn_dwa);//4.0定位按钮
-        btn_send = (Button) findViewById(R.id.btn_send);//发送按钮
+        btn_senduni = (Button) findViewById(R.id.btn_senduni);//发送按钮
         btn_cksc = (Button) findViewById(R.id.btn_cksc);//4.0串口输出按钮
         btn_xtzj = (Button) findViewById(R.id.btn_xtzj);//4.0系统自检按钮
         btn_sjsc = (Button) findViewById(R.id.btn_sjsc);//4.0时间输出按钮
@@ -334,7 +336,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
         btn_bsi.setOnClickListener(this);
         btn_txa.setOnClickListener(this);
         btn_dwa.setOnClickListener(this);
-        btn_send.setOnClickListener(this);
+        btn_senduni.setOnClickListener(this);
         btn_cksc.setOnClickListener(this);
         btn_xtzj.setOnClickListener(this);
         btn_sjsc.setOnClickListener(this);
@@ -369,7 +371,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
         tv_sos = (TextView) findViewById(R.id.tv_sos);
         tv_dl = (TextView) findViewById(R.id.tv_dl);
         tv_zjxx = (TextView) findViewById(R.id.tv_zjxx);
-        et_sendText = (EditText) findViewById(R.id.et_sendText);
+        et_sendTextuni = (EditText) findViewById(R.id.et_sendTextuni);
         et_inquire = (EditText) findViewById(R.id.et_inquire);
         et_setSOS = (EditText) findViewById(R.id.et_setSOS);
         tv_txr_21 = (TextView) findViewById(R.id.tv_txr_21);
@@ -474,6 +476,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
             case R.id.btn_cleardb://清空数据库
                 LitePal.deleteAll(ProtocalTable.class, "id>?", "0");
+                LitePal.deleteAll(MySendTable.class, "id>?", "0");
                 break;
             case R.id.btn_msc: //工作模式按钮，查询系统当前BDHZ工作模式(CCMSC)
                 BLEManager.getInstance().sendCCMSC();
@@ -683,12 +686,17 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                     tab.save();
                 }
                 break;
-            case R.id.btn_send: //(发送按钮)
-                try {
-                    //获取编辑框内数据传入发送函数
-                    BLEManager.getInstance().bdbleHandler.send(et_sendText.getText().toString().getBytes("gbk"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+            case R.id.btn_senduni: //(发送按钮)
+                et_sendText=et_sendTextuni.getText().toString();//获取发送编辑框内容
+                if(!et_sendText.equals(" ")){
+                    //发送数据
+                    BLEManager.getInstance().send(et_sendText.getBytes());
+                    //存入数据库
+                    if(!LitePal.isExist(MySendTable.class,"sendcontent=?",et_sendText)){
+                       MySendTable mySendTable=new MySendTable();
+                       mySendTable.setSendcontent(et_sendText);
+                       mySendTable.save();
+                    }
                 }
 
                 break;

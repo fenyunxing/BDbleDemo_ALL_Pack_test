@@ -21,7 +21,7 @@
     	<version value="1" />
     	定义版本号
     -->
-    <version value="1" />
+    <version value="2" />
 
     <!--
     	Define your models in the list with mapping tag, LitePal will
@@ -36,6 +36,7 @@
     -->
     <list>
         <mapping class="com.bdbledemo.LitePal.ProtocalTable" />
+        <mapping class="com.bdbledemo.LitePal.MySendTable"  />
     </list>
 
     <!--

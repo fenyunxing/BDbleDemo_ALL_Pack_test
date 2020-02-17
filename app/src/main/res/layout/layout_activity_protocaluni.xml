@@ -182,13 +182,13 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/et_sendText"
+                    android:id="@+id/et_sendTextuni"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5" />
 
                 <Button
-                    android:id="@+id/btn_send"
+                    android:id="@+id/btn_senduni"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
