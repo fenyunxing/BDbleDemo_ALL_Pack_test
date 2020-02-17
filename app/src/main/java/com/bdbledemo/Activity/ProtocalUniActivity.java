@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.bdbledemo.Activity.ScanActiviy.ScanBleActivityUni;
 import com.bdbledemo.Adapter.DataAdapter;
 import com.bdbledemo.Adapter.ScanBleAdapter;
+import com.bdbledemo.LitePal.ProtocalTable;
 import com.bdbledemo.R;
 import com.bdblesdkuni.executor.handler.BDBLEHandler;
 import com.bdblesdkuni.executor.handler.BLEManager;
@@ -50,7 +52,10 @@ import com.bddomainuni.models.entity.protocalBDHZ.BDQKX;
 import com.bddomainuni.models.entity.protocalBDHZ.BDQZX;
 import com.bddomainuni.repository.protcals.protocal4_0;
 import com.bddomainuni.repository.protcals.protocalEntity;
+import com.bddomainuni.repository.protcals.protocal_BDHZ;
 import com.bddomainuni.repository.tools.BDMethod;
+
+import org.litepal.LitePal;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -117,6 +122,8 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     private Button btn_qok;
     private Button btn_inquire;
     private Button btn_clear;
+    private Button btn_cleardb;
+
 
     private TextView tv_connectedDevice;
     private TextView tv_zdx;
@@ -141,6 +148,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     private TextView tv_rmc_21;
     private TextView tv_gga_21;
     private EditText et_sendText;
+    private EditText et_inquire;
     private EditText et_setSOS;
     private Context mContext;
     private String sosNum;
@@ -148,6 +156,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     private RMCMsg rmcTestMsg; //2.1协议RMC信息类
 
     private Toolbar toolbar;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +170,6 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
 
     }
-
 
 
     @Override
@@ -190,7 +198,8 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
         BLEManager.getInstance().disConnectBle();
         finish();
     }
-     //广播接收类，接受gatt广播
+
+    //广播接收类，接受gatt广播
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -214,6 +223,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
             }
         }
     };
+
     //添加要 监听的广播消息
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
@@ -226,6 +236,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void dataInit() {
+        db = LitePal.getDatabase(); //初始化数据库
         mscanAdapter = new ScanBleAdapter(this);
         mDataAdapter = new DataAdapter(this);
         lv_Data.setAdapter(mDataAdapter);
@@ -295,9 +306,11 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
         btn_vrq = (Button) findViewById(R.id.btn_vrq);//版本查询
         btn_bd_to_bd = (Button) findViewById(R.id.btn_bd2bd);//2BD
         btn_bd_to_bd_bypos = (Button) findViewById(R.id.btn_bd2bd_pos);//2BDPOS
-        btn_inquire=(Button)findViewById(R.id.btn_inquire); //查询按钮
-        btn_clear=(Button)findViewById(R.id.btn_clear); //清空按钮
+        btn_inquire = (Button) findViewById(R.id.btn_inquire); //查询按钮
+        btn_clear = (Button) findViewById(R.id.btn_clear); //清空按钮
+        btn_cleardb = (Button) findViewById(R.id.btn_cleardb);
 
+        btn_cleardb.setOnClickListener(this);
         btn_clear.setOnClickListener(this);
         btn_inquire.setOnClickListener(this);
         btn_msc.setOnClickListener(this);
@@ -355,6 +368,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
         tv_dl = (TextView) findViewById(R.id.tv_dl);
         tv_zjxx = (TextView) findViewById(R.id.tv_zjxx);
         et_sendText = (EditText) findViewById(R.id.et_sendText);
+        et_inquire=(EditText)findViewById(R.id.et_inquire);
         et_setSOS = (EditText) findViewById(R.id.et_setSOS);
         tv_txr_21 = (TextView) findViewById(R.id.tv_txr_21);
         tv_dwr_21 = (TextView) findViewById(R.id.tv_dwr_21);
@@ -448,24 +462,56 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_inquire://查询按钮
+            case R.id.btn_inquire://查询报文按钮
 
                 break;
             case R.id.btn_clear://清空显示按钮
                 mDataAdapter.arr.clear();
                 mDataAdapter.notifyDataSetChanged();
                 break;
-            case R.id.btn_msc: //工作模式按钮，查询系统当前工作模式(CCMSC)
+
+            case R.id.btn_cleardb://清空数据库
+                LitePal.deleteAll(ProtocalTable.class,"id>?","0");
+                break;
+            case R.id.btn_msc: //工作模式按钮，查询系统当前BDHZ工作模式(CCMSC)
                 BLEManager.getInstance().sendCCMSC();
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ccmsc")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 ccmsc");
+                    tab.setProtocalContent(protocal_BDHZ.gen_ccmsc());
+                    tab.save();
+                }
                 break;
-            case R.id.btn_vrq://版本查询按钮
+            case R.id.btn_vrq://版本查询按钮,BDHZ版本查询
                 BLEManager.getInstance().sendCCVRQ();
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ccvrq")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 ccvrq");
+                    tab.setProtocalContent(protocal_BDHZ.gen_ccvrq());
+                    tab.save();
+                }
                 break;
-            case R.id.btn_bd2bd://（2DB按钮）北斗网到北斗网
+            case R.id.btn_bd2bd://（BD2DB按钮）北斗网到北斗网
                 BLEManager.getInstance().sendBD2BD("123456", "你好");
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 bd2bd")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 bd2bd");
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2bd("123456", "你好"));
+                    tab.save();
+                }
                 break;
             case R.id.btn_bd2bd_pos://(2DBPOS按钮) 北斗网到北斗网(带位置)
                 BLEManager.getInstance().sendBD2BD_POS("123456", "你好", rmcTestMsg);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 bd2bd_bypos")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 bd2bd_bypos");
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2bd_bypos("123456", "你好", rmcTestMsg));
+                    tab.save();
+                }
                 break;
             case R.id.btn_qjy://(一键SOS按钮) 启动/关闭紧急求救
                 ifSosOpen = !ifSosOpen;
@@ -520,15 +566,15 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                             e.printStackTrace();
                         }
                         /*终端密码设置/登录(CCPWD)  参数type是  类型 ‘1’:密码设置 ‘2’:登录
-                        *                        参数pwd是   密码，六位数字或者英文字母
-                        * */
+                         *                        参数pwd是   密码，六位数字或者英文字母
+                         * */
                         BLEManager.getInstance().sendCCPWD("2", "000000");
                     }
                 }).start();
 
                 break;
             case R.id.btn_bsi://（4.0功率按钮） 发送功率检测指令（4.0）
-                                             //参数 freq   功率信息输出频度
+                //参数 freq   功率信息输出频度
                 BLEManager.getInstance().sendGLJC(5);
                 break;
             case R.id.btn_ici: /* （4.0IC 按钮） 发送IC检测指令（4.0）
@@ -536,12 +582,12 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                 BLEManager.getInstance().sendICJC(12);
                 break;
             case R.id.btn_txa://(4.0通信按钮) 发送通信申请信息（4.0）
-                              /* @param revIc
-                               *         接收卡号
-                               * @param msgType
-                               *         发送信息类型
-                               * @param msg
-                               *         发送内容  */
+                /* @param revIc
+                 *         接收卡号
+                 * @param msgType
+                 *         发送信息类型
+                 * @param msg
+                 *         发送内容  */
                 /*try {
                     BLEManager.getInstance().bdbleHandler.send("$CCRMO,,3,*4F".getBytes("gbk"));//关二代
                 } catch (UnsupportedEncodingException e) {
@@ -653,7 +699,6 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收到盒子SOS启动信息
-     *
      */
     @Override
     public void onBDQDX(BDQDX data) {
@@ -663,7 +708,6 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收到盒子极限追踪
-
      */
     @Override
     public void onBDQZX(BDQZX data) {
@@ -684,6 +728,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收到盒子的工作模式信息
+     *
      * @param paraMsg
      */
     @Override
@@ -694,7 +739,6 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收到盒子OK启动信息
-
      */
     @Override
     public void onBDQKX(BDQKX data) {
@@ -783,9 +827,9 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收通信信息接口
-     *
-
-     *         通信信息解析对象
+     * <p>
+     * <p>
+     * 通信信息解析对象
      */
     @Override
     public void onBDTXR(final TXRMsg txrMsg) {
@@ -798,9 +842,9 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收功率信息
-     *
-
-     *         功率信息解析对象
+     * <p>
+     * <p>
+     * 功率信息解析对象
      */
 
     @Override
@@ -818,9 +862,9 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收IC信息
-     *
-
-     *         IC信息解析对象
+     * <p>
+     * <p>
+     * IC信息解析对象
      */
     @Override
     public void onBDICI(final ICIMsg iciMsg) {
@@ -834,9 +878,9 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收反馈信息
-     *
-
-     *         反馈信息解析对象
+     * <p>
+     * <p>
+     * 反馈信息解析对象
      */
 
     @Override
@@ -851,9 +895,9 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收定位信息
-     *
-
-     *         定位信息解析对象
+     * <p>
+     * <p>
+     * 定位信息解析对象
      */
     @Override
     public void onBDDWR(final DWRMsg dwrMsg) {
@@ -873,12 +917,11 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     }
 
 
-
     /**
      * 接收RMC信息
-     *
-
-     *         RMC信息解析对象
+     * <p>
+     * <p>
+     * RMC信息解析对象
      */
     @Override
     public void onRMC(final RMCMsg rmcMsg) {
@@ -894,8 +937,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收GGA信息
      *
-     * @param paraMsg
-     *         GGA信息解析对象
+     * @param paraMsg GGA信息解析对象
      */
     @Override
     public void onGGA(final GGAMsg paraMsg) {
@@ -910,9 +952,9 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * 接收BDHZ信息
-     *
-
-     *         BDHZ信息解析对象
+     * <p>
+     * <p>
+     * BDHZ信息解析对象
      */
     @Override
     public void onBDHZ(final BDHZMsg bdhzMsg) {
@@ -957,9 +999,9 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收--WAA信息方法（2.1协议）
      * 修改日期 2017/5/25
-     *
-
-     *        WAA信息对象
+     * <p>
+     * <p>
+     * WAA信息对象
      */
     @Override
     public void onWAA(WAAMsg waaMsg) {
@@ -969,8 +1011,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收BBXX信息（4.0）
      *
-     * @param paraMsg
-     *         版本信息对象
+     * @param paraMsg 版本信息对象
      */
 
     @Override
@@ -982,8 +1023,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收DWXX信息（4.0）
      *
-     * @param paraMsg
-     *         定位信息对象
+     * @param paraMsg 定位信息对象
      */
     @Override
     public void onDWXX(final DWXXMsg paraMsg) {
@@ -1030,8 +1070,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收FKXX信息（4.0）
      *
-     * @param paraMsg
-     *         反馈信息对象
+     * @param paraMsg 反馈信息对象
      */
 
     @Override
@@ -1054,8 +1093,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收GLZK信息（4.0）
      *
-     * @param paraMsg
-     *         功率检测对象
+     * @param paraMsg 功率检测对象
      */
 
     @Override
@@ -1082,8 +1120,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收ICXX信息（4.0）
      *
-     * @param paraMsg
-     *         IC信息对象
+     * @param paraMsg IC信息对象
      */
     @Override
     public void onICXX(final ICXXMsg paraMsg) {
@@ -1116,8 +1153,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收SJXX信息（4.0）
      *
-     * @param paraMsg
-     *         时间信息对象
+     * @param paraMsg 时间信息对象
      */
 
     @Override
@@ -1140,8 +1176,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收TXXX信息（4.0）
      *
-     * @param paraMsg
-     *         通信信息对象
+     * @param paraMsg 通信信息对象
      */
     @Override
     public void onTXXX(final TXXXMsg paraMsg) {
@@ -1174,8 +1209,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     /**
      * 接收ZJXX信息（4.0）
      *
-     * @param paraMsg
-     *         自检信息对象
+     * @param paraMsg 自检信息对象
      */
     @Override
     public void onZJXX(final ZJXXMsg paraMsg) {

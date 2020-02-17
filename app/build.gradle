@@ -36,4 +36,5 @@ dependencies {
     api project(':blesdk')
     api project(':bddomain')
     api project(':bdblesdk')
+    implementation 'org.litepal.android:java:3.0.0'
 }
