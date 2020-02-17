@@ -65,7 +65,7 @@ public abstract class baseHandler {
     /**
      * 高程类型指示
      */
-    protected static class HeightFlag {
+    public static class HeightFlag {
         public static final String HIGHT_USER = "H"; //高空
         public static final String COMMON_USER = "L"; // 普通
     }
@@ -73,7 +73,7 @@ public abstract class baseHandler {
     /**
      * 测高方式
      */
-    protected static class CheckHighType {
+    public static class CheckHighType {
         public static final int HAVE_HIGH_VALUE = 0; //有高程
         public static final int HAVE_NO_HIGH_VALUE = 1; //无高程
         public static final int HAVE_CHECK_HIGH_1 = 2; // 测高1
@@ -83,7 +83,7 @@ public abstract class baseHandler {
     /**
      * 定位类型
      */
-    protected static class LocationType {
+    public static class LocationType {
         public static final String EMERGENCY_LOCATION = "A"; //紧急定位
         public static final String COMMON_LOCATION = "V"; // 普通定位
     }

@@ -27,6 +27,7 @@ import com.bdbledemo.R;
 import com.bdblesdkuni.executor.handler.BDBLEHandler;
 import com.bdblesdkuni.executor.handler.BLEManager;
 import com.bdblesdkuni.executor.handler.BleScanManager;
+import com.bdblesdkuni.executor.handler.baseHandler;
 import com.bdblesdkuni.impl.AgentListener;
 import com.bdblesdkuni.impl.BleScanListener;
 import com.bddomainuni.models.entity.protocal2_1.BSIMsg;
@@ -50,6 +51,7 @@ import com.bddomainuni.models.entity.protocalBDHZ.BDMSH;
 import com.bddomainuni.models.entity.protocalBDHZ.BDQDX;
 import com.bddomainuni.models.entity.protocalBDHZ.BDQKX;
 import com.bddomainuni.models.entity.protocalBDHZ.BDQZX;
+import com.bddomainuni.repository.protcals.protocal2_1;
 import com.bddomainuni.repository.protcals.protocal4_0;
 import com.bddomainuni.repository.protcals.protocalEntity;
 import com.bddomainuni.repository.protcals.protocal_BDHZ;
@@ -368,7 +370,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
         tv_dl = (TextView) findViewById(R.id.tv_dl);
         tv_zjxx = (TextView) findViewById(R.id.tv_zjxx);
         et_sendText = (EditText) findViewById(R.id.et_sendText);
-        et_inquire=(EditText)findViewById(R.id.et_inquire);
+        et_inquire = (EditText) findViewById(R.id.et_inquire);
         et_setSOS = (EditText) findViewById(R.id.et_setSOS);
         tv_txr_21 = (TextView) findViewById(R.id.tv_txr_21);
         tv_dwr_21 = (TextView) findViewById(R.id.tv_dwr_21);
@@ -471,7 +473,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.btn_cleardb://清空数据库
-                LitePal.deleteAll(ProtocalTable.class,"id>?","0");
+                LitePal.deleteAll(ProtocalTable.class, "id>?", "0");
                 break;
             case R.id.btn_msc: //工作模式按钮，查询系统当前BDHZ工作模式(CCMSC)
                 BLEManager.getInstance().sendCCMSC();
@@ -552,7 +554,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                     //存入发送信息到数据库
                     ProtocalTable tab = new ProtocalTable();
                     tab.setProtocalName("BDHZ协议 bd_login");
-                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd_login("209704", TYPE_LOGIN_NORMAL,Long.parseLong("15060877825"),"123456"));
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd_login("209704", TYPE_LOGIN_NORMAL, Long.parseLong("15060877825"), "123456"));
                     tab.save();
                 }
                 break;
@@ -619,7 +621,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                         BLEManager.getInstance().sendCCPWD("2", "000000");
                     }
                 }).start();
-                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 cczdc")&&
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 cczdc") &&
                         !LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ccpwd")) {
                     //存入发送信息到数据库
                     ProtocalTable tab = new ProtocalTable();
@@ -646,6 +648,13 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
             case R.id.btn_ici: /* （4.0IC 按钮） 发送IC检测指令（4.0）
                                                 参数frameNum 帧号 */
                 BLEManager.getInstance().sendICJC(12);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "4.0协议 icjc")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("4.0协议 icjc");
+                    tab.setProtocalContent(new String(protocal4_0.gen_icjc(12)));
+                    tab.save();
+                }
                 break;
             case R.id.btn_txa://(4.0通信按钮) 发送通信申请信息（4.0）
                 /* @param revIc
@@ -654,16 +663,25 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                  *         发送信息类型
                  * @param msg
                  *         发送内容  */
-                /*try {
-                    BLEManager.getInstance().bdbleHandler.send("$CCRMO,,3,*4F".getBytes("gbk"));//关二代
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }*/
+
                 BLEManager.getInstance().sendTXSQ(248112, MSG_TYPE_MIX, "你好ABC123");
-                //BLEManager.getInstance().sendTXSQ(248112,MSG_TYPE_CHINESE,"你好");
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "4.0协议 txsq")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("4.0协议 txsq");
+                    tab.setProtocalContent(new String(protocal4_0.gen_txsq(248112, MSG_TYPE_MIX, "你好ABC123")));
+                    tab.save();
+                }
                 break;
             case R.id.btn_dwa: //(4.0定位按钮)  发送定位申请指令（4.0）
                 BLEManager.getInstance().sendDWSQ();
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "4.0协议 dwsq")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("4.0协议 dwsq");
+                    tab.setProtocalContent(new String(protocal4_0.gen_dwsq()));
+                    tab.save();
+                }
                 break;
             case R.id.btn_send: //(发送按钮)
                 try {
@@ -672,58 +690,134 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+
                 break;
             case R.id.btn_cksc://（4.0串口输出按钮） 发送串口输出指令（4.0）
                                                     /* @param baudRate
                                                      设置传输速率（波特率）*/
                 BLEManager.getInstance().sendCKSC(protocal4_0.BAUDRATE_115200);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "4.0协议 cksc")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("4.0协议 cksc");
+                    tab.setProtocalContent(new String(protocal4_0.gen_cksc(protocal4_0.BAUDRATE_115200)));
+                    tab.save();
+                }
                 break;
             case R.id.btn_xtzj://（4.0系统自检按钮） 发送系统自检指令  freq 设置自检频率
                 BLEManager.getInstance().sendXTZJ(60);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "4.0协议 xtzj")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("4.0协议 xtzj");
+                    tab.setProtocalContent(new String(protocal4_0.gen_xtzj(60)));
+                    tab.save();
+                }
                 break;
             case R.id.btn_sjsc: //（4.0时间输出按钮）
                 BLEManager.getInstance().sendSJSC(5);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "4.0协议 sjsc")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("4.0协议 sjsc");
+                    tab.setProtocalContent(new String(protocal4_0.gen_sjsc(5)));
+                    tab.save();
+                }
                 break;
             case R.id.btn_bbdq: //（4.0 版本读取按钮）
                 BLEManager.getInstance().sendBBDQ();
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "4.0协议 bbdq")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("4.0协议 bbdq");
+                    tab.setProtocalContent(new String(protocal4_0.gen_bbdq()));
+                    tab.save();
+                }
                 break;
             case R.id.btn_setSOS: //（盒子掉电保存SOS卡号） 参数1 freq 设置频率   参数2 输入的卡号
                 sosNum = et_setSOS.getText().toString(); //获取输入文本框信息
                 BLEManager.getInstance().sendSET("60", sosNum);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 set")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 set");
+                    tab.setProtocalContent(protocal_BDHZ.gen_set("60", sosNum));
+                    tab.save();
+                }
                 break;
             case R.id.btn_back: //(返回按钮)
                 onBackPressed();
                 break;
             case R.id.btn_ici_21: //（2.1 IC 按钮） 发送IC检测申请（2.1）
                 BLEManager.getInstance().sendCCICA();
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "2.1协议 ccica")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("2.1协议 ccica");
+                    tab.setProtocalContent(protocal2_1.gen_ccica(0, 0));
+                    tab.save();
+                }
                 break;
             case R.id.btn_bsi_21: //（2.1功率按钮）  发送功率检测申请（2.1）
-                /*try {
-                    BLEManager.getInstance().bdbleHandler.send("$CCRMO,,4,*48".getBytes("gbk"));//开二代
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }*/
+
                 BLEManager.getInstance().sendCCRMO(2, 3);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "2.1协议 ccrmo")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("2.1协议 ccrmo");
+                    tab.setProtocalContent(protocal2_1.gen_ccrmo(2, 3));
+                    tab.save();
+                }
                 break;
             case R.id.btn_txa_21: //（2.1通信按钮） 发送通信申请（2.1）
-                //BLEManager.getInstance().sendCCTXA("0141814");
                 BLEManager.getInstance().sendCCTXA("0141814", 1, MSG_TYPE_CHINESE, "你好");
-//                BLEManager.getInstance().sendBD2NET("209704","15060877825","你好");
-//                BLEManager.getInstance().sendBD2NET_POS("123456","15060877825","你好",rmcTestMsg);
-//                BLEManager.getInstance().sendBD2PHONE("123456","15060877825","你好");
-//                BLEManager.getInstance().sendBD2PHONE_POS("123456","15060877825","你好",rmcTestMsg);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "2.1协议 cctxa")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("2.1协议 cctxa");
+                    tab.setProtocalContent(protocal2_1.gen_cctxa("0141814", 1, MSG_TYPE_CHINESE, "你好"));
+                    tab.save();
+                }
                 break;
             case R.id.btn_bd_to_net: //（bd_to_net按钮） 北斗网到公网
                 BLEManager.getInstance().sendBD2NET("209704", "15060877825", "你好");
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 bd2net")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 bd2net");
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2net("209704",Long.parseLong("15060877825"),"你好"));
+                    tab.save();
+                }
                 break;
             case R.id.btn_bd_to_net_bypos: //(bd_to_net_bypos按钮)  北斗网到公网(带位置)
                 BLEManager.getInstance().sendBD2NET_POS("209704", "15060877825", "你好", rmcTestMsg);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 bd2net_bypos")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 bd2net_bypos");
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2net_bypos("209704",Long.parseLong("15060877825"),"你好", rmcTestMsg));
+                    tab.save();
+                }
                 break;
             case R.id.btn_bd_to_phone: //（bd_to_phone 按钮） 北斗网到手机短信
                 BLEManager.getInstance().sendBD2PHONE("209704", "15060877825", "你好");
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 bd2phone")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 bd2phone");
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2phone("209704",Long.parseLong("15060877825"),"你好"));
+                    tab.save();
+                }
                 break;
             case R.id.btn_bd_to_phone_bypos: //（bd_to_phone_bypos 按钮） 北斗网到手机短信（带位置)
                 BLEManager.getInstance().sendBD2PHONE_POS("209704", "15060877825", "你好", rmcTestMsg);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 bd2phone_bypos")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 bd2phone_bypos");
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2phone_bypos("209704",Long.parseLong("15060877825"),"你好", rmcTestMsg));
+                    tab.save();
+                }
                 break;
             case R.id.btn_bd_pos: //（位置上报按钮） 北斗网app位置上报
                 List<RMCMsg> list = new ArrayList<>();
@@ -733,30 +827,65 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                 list.add(rmcTestMsg);
                 list.add(rmcTestMsg);
                 BLEManager.getInstance().sendAppPos("209704", list);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 bd_zzm")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 bd_zzm");
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd_zzm("209704", list));
+                    tab.save();
+                }
                 break;
             case R.id.btn_dwa_21: //（2.1定位按钮）
                 BLEManager.getInstance().sendCCDWA("0141814");
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "2.1协议 ccdwa")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("2.1协议 ccdwa");
+                    tab.setProtocalContent(protocal2_1.gen_ccdwa("0141814", baseHandler.LocationType.COMMON_LOCATION, baseHandler.CheckHighType.HAVE_NO_HIGH_VALUE,
+                            baseHandler.HeightFlag.COMMON_USER, "0", 0, 0, 0, 0));
+                    tab.save();
+                }
                 break;
-            case R.id.btn_disconnectDevice: //（断开连接按钮）
-                BLEManager.getInstance().disConnectBle();
-                break;
-            case R.id.btn_startScan: //（开始扫描按钮）
-                mbleScanManager.scanDevice(true);
-                break;
-            case R.id.btn_stopScan: //（停止扫描按钮）
-                mbleScanManager.scanDevice(false);
-                break;
+
             case R.id.btn_sos_open: //（SOS开按钮）  开启与关闭SOS功能
                 BLEManager.getInstance().sendSOS(sosNum, true, "请求支援！");
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 opensos")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 opensos");
+                    tab.setProtocalContent(protocal_BDHZ.gen_opnsos(sosNum, true, "请求支援！"));
+                    tab.save();
+                }
                 break;
             case R.id.btn_sos_close: //（SOS关按钮）  开启与关闭SOS功能
                 BLEManager.getInstance().sendSOS(sosNum, false, "请求支援！");
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 closesos")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 closesos");
+                    tab.setProtocalContent(protocal_BDHZ.gen_opnsos(sosNum, false, "请求支援！"));
+                    tab.save();
+                }
                 break;
             case R.id.btn_dljc://（电量按钮） 开启电量检测功能
                 BLEManager.getInstance().sendDLJC();
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 dljc")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 dljc");
+                    tab.setProtocalContent(protocal_BDHZ.gen_dljc());
+                    tab.save();
+                }
                 break;
             case R.id.btn_ztjc: //（电量检测初始化按钮）
                 BLEManager.getInstance().sendINIT();
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ztjc")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 ztjc");
+                    tab.setProtocalContent(protocal_BDHZ.gen_ztjc());
+                    tab.save();
+                }
                 break;
             default:
                 break;
