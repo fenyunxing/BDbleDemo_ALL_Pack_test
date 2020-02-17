@@ -516,17 +516,45 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
             case R.id.btn_qjy://(一键SOS按钮) 启动/关闭紧急求救
                 ifSosOpen = !ifSosOpen;
                 BLEManager.getInstance().sendCCQJY(ifSosOpen);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ccqjy")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 ccqjy");
+                    tab.setProtocalContent(protocal_BDHZ.gen_ccqjy(ifSosOpen));
+                    tab.save();
+                }
                 break;
             case R.id.btn_qzz://（一键追踪按钮） 启动/关闭极限追踪
                 ifZzmOpen = !ifZzmOpen;
                 BLEManager.getInstance().sendCCQZZ(ifZzmOpen);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ccqzz")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 ccqzz");
+                    tab.setProtocalContent(protocal_BDHZ.gen_ccqzz(ifZzmOpen));
+                    tab.save();
+                }
                 break;
             case R.id.btn_qok: //（一键OK按钮）启动/关闭OK
                 ifOKOpen = !ifOKOpen;
                 BLEManager.getInstance().sendCCQOK(ifOKOpen);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ccqok")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 ccqok");
+                    tab.setProtocalContent(protocal_BDHZ.gen_ccqok(ifOKOpen));
+                    tab.save();
+                }
                 break;
             case R.id.btn_bd_login://（登录按钮） 北斗网登录
                 BLEManager.getInstance().sendBDLOGIN("209704", TYPE_LOGIN_NORMAL, "15060877825", "123456");
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 bd_login")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 bd_login");
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd_login("209704", TYPE_LOGIN_NORMAL,Long.parseLong("15060877825"),"123456"));
+                    tab.save();
+                }
                 break;
             case R.id.btn_oks: //（OKS按钮）OK键设置并发送设置参数
                 protocalEntity.CCOKSobj ccoksSobj = new protocalEntity.CCOKSobj();
@@ -535,6 +563,13 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                         .setMsg("你好");
 
                 BLEManager.getInstance().sendCCOKS(ccoksSobj);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ccoks")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 ccoks");
+                    tab.setProtocalContent(protocal_BDHZ.gen_ccoks(ccoksSobj));
+                    tab.save();
+                }
                 break;
             case R.id.btn_zzm://（zzm按钮）极限追踪设置和查询（CCZZM）
                 protocalEntity.CCZZMobj cczzMobj = new protocalEntity.CCZZMobj();
@@ -542,8 +577,14 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                         .setCenterCrd("123456")
                         .setFreq("10")
                         .setMode(MODE_RDRN);
-
                 BLEManager.getInstance().sendCCZZM(cczzMobj);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 cczzm")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 cczzm");
+                    tab.setProtocalContent(protocal_BDHZ.gen_cczzm(cczzMobj));
+                    tab.save();
+                }
                 break;
             case R.id.btn_shm://（shm按钮）SOS设置和查询（CCSHM）
                 protocalEntity.CCSHMobj ccshMobj = new protocalEntity.CCSHMobj();
@@ -553,6 +594,13 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                         .setMsg("你好");
 
                 BLEManager.getInstance().sendCCSHM(ccshMobj);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ccshm")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 ccshm");
+                    tab.setProtocalContent(protocal_BDHZ.gen_ccshm(ccshMobj));
+                    tab.save();
+                }
                 break;
             case R.id.btn_login://（初始化按钮）
                 //开启一个线程发送初始化的设置信息
@@ -571,11 +619,29 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                         BLEManager.getInstance().sendCCPWD("2", "000000");
                     }
                 }).start();
-
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 cczdc")&&
+                        !LitePal.isExist(ProtocalTable.class, "protocalname=?", "BDHZ协议 ccpwd")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("BDHZ协议 cczdc");
+                    tab.setProtocalContent(protocal_BDHZ.gen_cczdc("4"));
+                    tab.save();
+                    ProtocalTable tab1 = new ProtocalTable();
+                    tab1.setProtocalName("BDHZ协议 ccpwd");
+                    tab1.setProtocalContent(protocal_BDHZ.gen_ccpwd("2", "000000"));
+                    tab1.save();
+                }
                 break;
             case R.id.btn_bsi://（4.0功率按钮） 发送功率检测指令（4.0）
                 //参数 freq   功率信息输出频度
                 BLEManager.getInstance().sendGLJC(5);
+                if (!LitePal.isExist(ProtocalTable.class, "protocalname=?", "4.0协议 gljc")) {
+                    //存入发送信息到数据库
+                    ProtocalTable tab = new ProtocalTable();
+                    tab.setProtocalName("4.0协议 gljc");
+                    tab.setProtocalContent(new String(protocal4_0.gen_gljc(5)));
+                    tab.save();
+                }
                 break;
             case R.id.btn_ici: /* （4.0IC 按钮） 发送IC检测指令（4.0）
                                                 参数frameNum 帧号 */
