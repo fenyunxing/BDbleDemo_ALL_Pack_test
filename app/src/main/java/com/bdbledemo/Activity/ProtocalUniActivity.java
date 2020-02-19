@@ -156,6 +156,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     private Context mContext;
     private String sosNum;
     private String et_sendText;
+    private String et_inquireText;
 
     private RMCMsg rmcTestMsg; //2.1协议RMC信息类
 
@@ -467,7 +468,23 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_inquire://查询报文按钮
-
+                et_inquireText = et_inquire.getText().toString();//获取查询编辑框内容
+                String tableName, inquireContent;
+                String[] s = et_inquireText.split("#", 2);
+                tableName = s[0];
+                inquireContent = s[1];
+                switch (tableName) {
+                    case "ProtocalTable.class":
+                        List<ProtocalTable> list=LitePal.where("protocalName=?",inquireContent).find(ProtocalTable.class);
+                        mDataAdapter.arr.add(list.get(0).getProtocalContent());
+                        mDataAdapter.notifyDataSetChanged();
+                        break;
+                    case "MySendTable.class":
+                        List<MySendTable> list1=LitePal.where("sendcontent=?",inquireContent).find(MySendTable.class);
+                        mDataAdapter.arr.add(list1.get(0).getSendcontent());
+                        mDataAdapter.notifyDataSetChanged();
+                        break;
+                }
                 break;
             case R.id.btn_clear://清空显示按钮
                 mDataAdapter.arr.clear();
@@ -687,15 +704,15 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.btn_senduni: //(发送按钮)
-                et_sendText=et_sendTextuni.getText().toString();//获取发送编辑框内容
-                if(!et_sendText.equals(" ")){
+                et_sendText = et_sendTextuni.getText().toString();//获取发送编辑框内容
+                if (!et_sendText.equals(" ")) {
                     //发送数据
                     BLEManager.getInstance().send(et_sendText.getBytes());
                     //存入数据库
-                    if(!LitePal.isExist(MySendTable.class,"sendcontent=?",et_sendText)){
-                       MySendTable mySendTable=new MySendTable();
-                       mySendTable.setSendcontent(et_sendText);
-                       mySendTable.save();
+                    if (!LitePal.isExist(MySendTable.class, "sendcontent=?", et_sendText)) {
+                        MySendTable mySendTable = new MySendTable();
+                        mySendTable.setSendcontent(et_sendText);
+                        mySendTable.save();
                     }
                 }
 
@@ -793,7 +810,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                     //存入发送信息到数据库
                     ProtocalTable tab = new ProtocalTable();
                     tab.setProtocalName("BDHZ协议 bd2net");
-                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2net("209704",Long.parseLong("15060877825"),"你好"));
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2net("209704", Long.parseLong("15060877825"), "你好"));
                     tab.save();
                 }
                 break;
@@ -803,7 +820,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                     //存入发送信息到数据库
                     ProtocalTable tab = new ProtocalTable();
                     tab.setProtocalName("BDHZ协议 bd2net_bypos");
-                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2net_bypos("209704",Long.parseLong("15060877825"),"你好", rmcTestMsg));
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2net_bypos("209704", Long.parseLong("15060877825"), "你好", rmcTestMsg));
                     tab.save();
                 }
                 break;
@@ -813,7 +830,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                     //存入发送信息到数据库
                     ProtocalTable tab = new ProtocalTable();
                     tab.setProtocalName("BDHZ协议 bd2phone");
-                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2phone("209704",Long.parseLong("15060877825"),"你好"));
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2phone("209704", Long.parseLong("15060877825"), "你好"));
                     tab.save();
                 }
                 break;
@@ -823,7 +840,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                     //存入发送信息到数据库
                     ProtocalTable tab = new ProtocalTable();
                     tab.setProtocalName("BDHZ协议 bd2phone_bypos");
-                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2phone_bypos("209704",Long.parseLong("15060877825"),"你好", rmcTestMsg));
+                    tab.setProtocalContent(protocal_BDHZ.gen_txa_bd2phone_bypos("209704", Long.parseLong("15060877825"), "你好", rmcTestMsg));
                     tab.save();
                 }
                 break;
