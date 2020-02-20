@@ -169,8 +169,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.layout_activity_protocaluni);
         viewsInit();
         dataInit();
-        //float num = 108.2255f;
-        //Log.v("FDBDTestLog","输出"+ BDMethod.castLongToHexStringByNum((new Date().getTime())/1000,4));
+       // com.blesdk.executor.handler.BLEManager.getInstance().agentListeners.add((com.blesdk.impl.AgentListener) this);
         mContext = this;
 
 
@@ -218,6 +217,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
                 invalidateOptionsMenu();
                 //蓝牙断开返回操作
             } else if (BDBLEHandler.ACTION_DATA_AVAILABLE.equals(action)) {
+                //把串口上可用数据实时添加到显示适配器，第一个+前是当前时间，第二个+后是数据
                 mDataAdapter.arr.add(BDMethod.castCalendarToString(Calendar.getInstance(), null) + "  " + intent.getStringExtra(BDBLEHandler.EXTRA_DATA));
                 mDataAdapter.notifyDataSetChanged();
                 //接收数据状态
@@ -436,16 +436,7 @@ public class ProtocalUniActivity extends AppCompatActivity implements View.OnCli
             @Override
             //设置扫描结果返回响应
             public void onScanResult(final BluetoothDevice bluetoothDevice, int rssi) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!devices.contains(bluetoothDevice)) {
-                            devices.add(bluetoothDevice);
-                            mscanAdapter.setDatas(devices);
-                            mscanAdapter.notifyDataSetChanged();
-                        }
-                    }
-                });
+
             }
 
             @Override

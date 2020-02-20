@@ -32,6 +32,7 @@ import java.util.UUID;
  * Created by admin on 2016/10/21. Modified by admin on 2017/05/13
  */
 public class BDBLEHandler extends baseHandler {
+    private BDBLEHandler bdbleHandler = null;
     public BluetoothGatt mBluetoothGatt;
     public Context mContext;
     private BluetoothManager mBluetoothManager;

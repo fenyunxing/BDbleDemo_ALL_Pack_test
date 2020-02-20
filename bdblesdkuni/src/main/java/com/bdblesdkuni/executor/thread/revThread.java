@@ -14,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * 蓝牙接收组装线程类(适用于4.0协议)
  * 负责将放在接收缓存的数据组装成完整命令，并传递给后续解析方法
- *
+ * <p>
  * Created by admin on 2017/05/24.
  */
 public class revThread extends Thread {
@@ -32,8 +32,7 @@ public class revThread extends Thread {
     /**
      * 将接收信息存入接收缓存列表
      *
-     * @param parambytes
-     *         接收字节信息
+     * @param parambytes 接收字节信息
      */
     public void setRevTempMsg(byte[] parambytes) {
         mRevMessage.setByteList(parambytes);
@@ -57,13 +56,21 @@ public class revThread extends Thread {
         while (!isInterrupted()) {
             int tempBufferDataSize = -1;
             if ((mRevMessage.getByteList() != null && mRevMessage.getSize() > 0) || frameBufferDataEndIndex > 0) {
+                //普通接收消息提取开始，并发送广播消息
+                intent.putExtra(BDBLEHandler.EXTRA_DATA,new String(mRevMessage.getByteList()));
+                if(BLEManager.getInstance().bdbleHandler!=null){
+                    BLEManager.getInstance().bdbleHandler.mContext.getApplicationContext().sendBroadcast(intent);
+                }
+                //普通接受结束，清空接受缓存
+                 mRevMessage.delByteList();
+                //以下所有代码是北斗相关接收处理和发送广播
                 if (mRevMessage.getByteList() != null) {
                     tempBufferDataSize = mRevMessage.getByteList().length;//取出蓝牙20字节缓存空间的实际信息长度
                     byte[] tempBuffer = new byte[tempBufferDataSize];
                     tempBuffer = mRevMessage.getByteList();
                     if (frameBufferDataEndIndex + tempBufferDataSize > maxBufferLength) {
                         //二级缓存溢出，暴力抛弃
-                       // Log.v("FDBDTestLog","二级缓存溢出，暴力抛弃");
+                        // Log.v("FDBDTestLog","二级缓存溢出，暴力抛弃");
                         frameBufferDataEndIndex = 0;
                     } else {
                         System.arraycopy(tempBuffer, 0, frameBuffer, frameBufferDataEndIndex, tempBufferDataSize);
@@ -73,11 +80,11 @@ public class revThread extends Thread {
                 }
 
                 while (frameBufferDataEndIndex > 0) {
-                   // Log.v("FDBDTestLog", "frameBuffer ==>" + new String(frameBuffer));
+                    // Log.v("FDBDTestLog", "frameBuffer ==>" + new String(frameBuffer));
                     //Log.v("FDBDTestLog", "0D0Aposition ==>" + get0D0Aposition(frameBuffer, frameBufferDataEndIndex));
                     //查找"$"去除"$"前的多余间隔，保证缓存第一位为"$"
                     if (frameBuffer[0] != 0x24) {
-                      //  Log.v("FDBDTestLog", "1) 查找$");
+                        //  Log.v("FDBDTestLog", "1) 查找$");
                         for (int i = 0; i < frameBufferDataEndIndex; i++) {
                             if (frameBuffer[i] == 0x24) {
                                 System.arraycopy(frameBuffer, i, frameBuffer, 0,
@@ -99,7 +106,7 @@ public class revThread extends Thread {
                         System.arraycopy(frameBuffer, 0, data, 0, dataLen);
                         try {
                             intent.putExtra(BDBLEHandler.EXTRA_DATA,
-                                    new String(data,"gbk"));
+                                    new String(data, "gbk"));
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
@@ -123,7 +130,7 @@ public class revThread extends Thread {
                         System.arraycopy(frameBuffer, 0, data, 0, (dataLen - 2));
                         try {
                             intent.putExtra(BDBLEHandler.EXTRA_DATA,
-                                    new String(data,"gbk"));
+                                    new String(data, "gbk"));
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
@@ -147,121 +154,11 @@ public class revThread extends Thread {
                         //2) 当接收缓存数据大于最大协议数据长度，去掉首部$，舍弃该帧
                         frameBufferDataEndIndex -= 1;
                         System.arraycopy(frameBuffer, 1, frameBuffer, 0, frameBufferDataEndIndex);
-                    } else {
-                        //Log.v("FDBDTestLog", "6) 不够");
-                        //当接收协议数据还不完整时
-                        break;
                     }
-
                 }
 
 
 
-                /*while (frameBufferDataEndIndex > 0) {
-                    if (frameBufferDataEndIndex >= maxDataFrameLength) {
-                        frameBufferDataEndIndex = 0;
-                        break;
-                    }
-                    //查找"$"去除"$"前的多余间隔，保证缓存第一位为"$"
-                    if (frameBuffer[0] != 0x24) {
-                        for (int i = 0; i < frameBufferDataEndIndex; i++) {
-                            if (frameBuffer[i] == 0x24) {
-                                System.arraycopy(frameBuffer, i, frameBuffer, 0,
-                                        frameBufferDataEndIndex - i);
-                                frameBufferDataEndIndex -= i;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (frameBufferDataEndIndex >= 3) {
-                        //Log.v("FDBDTestLog", "typeFrame ==> " + typeFrame);
-                        if (frameBuffer[1] == 0x42) {
-                            if (frameBuffer[2] == 0x44) {
-                                typeFrame = TYPE_FRAME_21;
-                            }
-                        } else if (frameBuffer[1] == 0x47) {
-                            if (frameBuffer[2] == 0x50) {
-                                typeFrame = TYPE_FRAME_21;
-                            } else if (frameBuffer[2] == 0x4E) {
-                                typeFrame = TYPE_FRAME_21;
-                            } else if (frameBuffer[2] == 0x4C) {
-                                typeFrame = TYPE_FRAME_21;
-                            } else if (frameBuffer[2] == 0x41) {
-                                typeFrame = TYPE_FRAME_21;
-                            }
-                        } else if (frameBuffer[1] == 0x43) {
-                            if (frameBuffer[2] == 0x43) {
-                                typeFrame = TYPE_FRAME_21;
-                            }
-                        } else {
-                            typeFrame = TYPE_FRAME_40;
-                            //Log.v("FDBDTestLog", "typeFrame ==> " + typeFrame);
-                        }
-                    }
-
-                    if(typeFrame == TYPE_FRAME_21){
-                        if (frameBufferDataEndIndex >= headerFieldEndOffset) {
-                            for (int i = (headerFieldEndOffset - 3); i < frameBufferDataEndIndex; i++) {
-                                if (frameBuffer[i] == 0x0A) {
-                                    if (frameBuffer[i - 1] == 0x0D) {
-                                        //Log.v("FDBD TestLog", "dataLen ====> " + dataLen);
-                                        dataLen = i - 1;
-                                        byte[] data = new byte[dataLen];
-                                        System.arraycopy(frameBuffer, 0, data, 0, dataLen);
-                                        //Log.v("FDBDTestLog", "========= data ========= " + new String(data));
-                                        intent.putExtra(BDBLEHandler.EXTRA_DATA,
-                                                new String(data));
-                                        if(BLEManager.getInstance().bdbleHandler !=null){
-                                            BLEManager.getInstance().bdbleHandler.mContext.getApplicationContext().sendBroadcast(intent);
-                                            BLEManager.getInstance().bdbleHandler.onMessageReceivered(data,BDBLEHandler.TYPE_PROTOCAL_21);
-                                        }
-                                        frameBufferDataEndIndex -= dataLen;
-                                        System.arraycopy(frameBuffer, dataLen, frameBuffer, 0,
-                                                frameBufferDataEndIndex);
-                                    }
-                                }
-                            }
-                            break;
-                        } else {
-                            break;
-                        }
-                    }else if(typeFrame == TYPE_FRAME_40){
-                        //判断是否二级有效数据索引是否大于协议头部长度
-                        if (frameBufferDataEndIndex >= headerFieldEndOffset) {
-                            dataLen = frameBuffer[5] << 8 | frameBuffer[6];
-                            //判断去除长度字段数值是否协议最大长度
-                            if (dataLen > maxBufferLength) {
-                                frameBufferDataEndIndex -= 1;
-                                System.arraycopy(frameBuffer, 1, frameBuffer, 0, frameBufferDataEndIndex);
-                            }
-                            //判断二级缓存有效数据索引是否大于该条协议数据长度，且该条协议数据长度大于0
-                            if (frameBufferDataEndIndex >= dataLen && dataLen > 0) {
-                                //Log.v("FDBDTestLog", "dataLen ====> " + dataLen);
-                                byte[] data = new byte[dataLen];
-                                System.arraycopy(frameBuffer, 0, data, 0, dataLen);
-                                //Log.v("FDBDTestLog", "========= data ========= " + new String(data));
-                                intent.putExtra(BDBLEHandler.EXTRA_DATA,
-                                        new String(data));
-                                if(BLEManager.getInstance().bdbleHandler !=null){
-                                    BLEManager.getInstance().bdbleHandler.mContext.getApplicationContext().sendBroadcast(intent);
-                                    BLEManager.getInstance().bdbleHandler.onMessageReceivered(data,BDBLEHandler.TYPE_PROTOCAL_40);
-                                }
-                                frameBufferDataEndIndex -= dataLen;
-                                System.arraycopy(frameBuffer, dataLen, frameBuffer, 0,
-                                        frameBufferDataEndIndex);
-                            } else {
-                                break;
-                            }
-
-                        } else {
-                            break;
-                        }
-                    }else {
-                        break;
-                    }
-
-                }*/
             } else {
                 try {
                     Thread.currentThread().sleep(50L);
@@ -271,84 +168,8 @@ public class revThread extends Thread {
             }
         }
 
-        /*try {
-            while (!isStop()) {
 
-                if (mRevMessage.getByteList() != null && mRevMessage.getSize() > 0) {
-                    data = mRevMessage.getByteList();
-                    if (data != null && data.length > 0) {
-                        for (int i = 0; i < data.length; i++) {
-                            if ((data[i] == '$') && (begin == 0)) {
-                                dataTEMP40[begin] = data[i];
-                                dataTEMP21[begin++] = data[i];
-                            } else if (begin > 0) {
-                                dataTEMP40[begin] = data[i];
-                                dataTEMP21[begin++] = data[i];
-                                if (begin == 7) {
-                                    length = getLength(dataTEMP40[5], dataTEMP40[6]);
-                                    byte[] changeByte = new byte[7];
-                                    System.arraycopy(dataTEMP40, 0, changeByte, 0, 7);
-                                    dataTEMP40 = new byte[length];
-                                    System.arraycopy(changeByte, 0, dataTEMP40, 0, 7);
-                                    //Log.v("FDBDTestLog","length ==> "+length);
-                                } else if (begin > 7) {
 
-                                    if (dataTEMP21[begin - 5] == '*' && dataTEMP21[begin - 2] == ((byte)0x0D) && dataTEMP21[begin - 1] == ((byte)0x0A)) {
-
-                                        intent.putExtra(BDBLEHandler.EXTRA_DATA,
-                                                new String(dataTEMP21));
-                                        if(BLEManager.getInstance().bdbleHandler !=null){
-                                            BLEManager.getInstance().bdbleHandler.mContext.getApplicationContext().sendBroadcast(intent);
-                                            BLEManager.getInstance().bdbleHandler.onMessageReceivered(dataTEMP21,BDBLEHandler.TYPE_PROTOCAL_21);
-                                        }
-
-                                        begin = 0;
-                                        dataTEMP40 = new byte[300];
-                                        dataTEMP21 = new byte[300];
-                                    }
-
-                                    if (begin > (length - 1)) {
-                                        intent.putExtra(BDBLEHandler.EXTRA_DATA, new String(dataTEMP40));
-                                        if (BLEManager.getInstance().bdbleHandler != null) {
-                                            BLEManager.getInstance().bdbleHandler.mContext.getApplicationContext().sendBroadcast(intent);
-                                            BLEManager.getInstance().bdbleHandler.onMessageReceivered(dataTEMP40,BDBLEHandler.TYPE_PROTOCAL_40);
-                                        }
-                                        //Log.v("FDBDTestLog","接收到的4.0信息 == >"+BDMethod.castBytesToHexString(dataTEMP40));
-                                        begin = 0;
-                                        dataTEMP40 = new byte[300];
-                                        dataTEMP21 = new byte[300];
-                                    }
-                                }
-
-                                if (begin >= 299) {
-                                    dataTEMP40 = new byte[300];
-                                    dataTEMP21 = new byte[300];
-                                    String attentionString = "error : Already received more than 300 bytes , but did not search to '*'!";
-                                    dataTEMP40 = attentionString.getBytes();
-                                    intent.putExtra(BDBLEHandler.EXTRA_DATA,
-                                            new String(dataTEMP40));
-
-                                    if (BLEManager.getInstance().bdbleHandler != null) {
-                                        BLEManager.getInstance().bdbleHandler.mContext.getApplicationContext().sendBroadcast(intent);
-                                    }
-                                    begin = 0;
-                                    dataTEMP40 = new byte[300];
-                                    dataTEMP21 = new byte[300];
-                                }
-                            }
-                        }
-                        mRevMessage.delByteList();
-                    } else {
-                        Thread.currentThread().sleep(50L);
-                    }
-                } else {
-                    Thread.currentThread().sleep(50L);
-                }
-            }
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }*/
     }
 
     private boolean isStop() {
@@ -364,13 +185,11 @@ public class revThread extends Thread {
 
     /**
      * 获取长度值
-     *
+     * <p>
      * 根据4.0协议长度信息，将byte[]形式转为int形式
      *
-     * @param high
-     *         高位字节
-     * @param low
-     *         低位字节
+     * @param high 高位字节
+     * @param low  低位字节
      */
     private int getLength(byte high, byte low) {
         byte[] lengthByte = new byte[2];
